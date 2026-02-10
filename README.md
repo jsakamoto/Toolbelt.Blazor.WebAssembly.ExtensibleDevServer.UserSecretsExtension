@@ -81,6 +81,6 @@ Browser requests GET /appsettings.Development.json
 Browser receives merged configuration
 ```
 
-## License and 3rd Party Notices
+## License
 
 This project is licensed under the Mozilla Public License v2.0. See the [LICENSE](https://github.com/jsakamoto/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension/blob/main/LICENSE) file for details.
