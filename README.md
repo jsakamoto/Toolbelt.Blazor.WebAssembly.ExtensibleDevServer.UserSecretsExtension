@@ -2,6 +2,8 @@
 
 An extension that enables the use of User Secrets in a Blazor WebAssembly Standalone project hosted using the Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.
 
+![User Secrets overriding appsettings values in Blazor WebAssembly](https://github.com/jsakamoto/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension/blob/main/.assets/social-preview.png)
+
 It allows developers to manage their own custom configuration settings without modifying or accidentally committing appsettings.json or appsettings.Development.json files to source control.
 
 ## The Problem
