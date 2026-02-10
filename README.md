@@ -24,7 +24,7 @@ When installed, it intercepts HTTP GET requests for `appsettings.*.json` files s
 
 This means each developer can maintain their own personal overrides via User Secrets, completely separate from the shared configuration files.
 
-> [!WARNING]
+> [!CAUTION]
 > **User Secrets are NOT secret in this context.**
 >
 > Despite the name ".NET User Secrets", the values you store are **not protected** in any way. They are served in plain text through anonymous HTTP GET requests for `appsettings.json`, just like any other configuration value. In this extension, User Secrets simply act as **a third configuration store**, nothing more. Do **not** use this mechanism to store actual secrets such as passwords or tokens that must remain confidential.
