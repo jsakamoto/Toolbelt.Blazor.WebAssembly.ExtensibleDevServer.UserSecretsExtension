@@ -1,5 +1,8 @@
 # User Secrets Extension for Blazor WebAssembly Extensible Dev Server
 
+[![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension/) [![Discord](https://img.shields.io/discord/798312431893348414?style=flat&logo=discord&logoColor=white&label=Blazor%20Community&labelColor=5865f2&color=gray)](https://discord.com/channels/798312431893348414/1202165955900473375)
+
+
 An extension that enables the use of User Secrets in a Blazor WebAssembly Standalone project hosted using the Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.
 
 ![User Secrets overriding appsettings values in Blazor WebAssembly](https://github.com/jsakamoto/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension/blob/main/.assets/social-preview.png)
