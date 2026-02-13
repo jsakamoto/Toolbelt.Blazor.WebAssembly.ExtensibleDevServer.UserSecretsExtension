@@ -53,7 +53,7 @@ Alternatively, use the .NET CLI:
 
 ```shell
 dotnet user-secrets init   # only needed once per project
-dotnet user-secrets set "SomeSection:SomeKey" "my-custom-value"
+dotnet user-secrets set "SomeKey" "my-custom-value"
 ```
 
 ### 3. Run your project
