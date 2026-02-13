@@ -1,4 +1,13 @@
+@using System.Runtime.InteropServices
 @inject IConfiguration Configuration
+
+<header>
+    <h1>Blazor WebAssembly App</h1>
+    <h2>User Secrets Extension for Ex Dev Server</h2>
+    <div>
+        @RuntimeInformation.OSDescription / @RuntimeInformation.OSArchitecture / @RuntimeInformation.FrameworkDescription
+    </div>
+</header>
 
 <main>
     <span>Configuration["Foo:Bar"] is </span>
