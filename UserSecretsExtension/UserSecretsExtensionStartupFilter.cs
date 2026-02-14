@@ -1,11 +1,11 @@
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 
 namespace Toolbelt.Blazor.WebAssembly.DevServer.Extensions.UserSecrets;
 
@@ -65,18 +65,10 @@ public class UserSecretsExtensionStartupFilter : IStartupFilter
         var originalResponseBytes = memStream.ToArray();
         var responseBody = Encoding.UTF8.GetString(originalResponseBytes);
 
-        // Merge JSON in responseBody with secrets JSON
-        var responseNode = JsonNode.Parse(responseBody);
         var secretJsonText = await File.ReadAllTextAsync(secretJsonPath);
-        var secretNode = JsonNode.Parse(secretJsonText);
 
-        var mergedNode = MergeJson(responseNode, secretNode);
-        var mergedJson = mergedNode is null
-            ? "null"
-            : mergedNode.ToJsonString(new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
+        // Merge JSON in responseBody with secrets JSON
+        var mergedJson = MergeJsonStrings(responseBody, secretJsonText);
 
         var mergedBytes = Encoding.UTF8.GetBytes(mergedJson);
         context.Response.ContentLength = mergedBytes.Length;
@@ -86,6 +78,19 @@ public class UserSecretsExtensionStartupFilter : IStartupFilter
     private static void RemoveRequestHeaders(HttpContext context, IEnumerable<string> headers)
     {
         foreach (var header in headers) context.Request.Headers.Remove(header);
+    }
+
+    internal static string MergeJsonStrings(string baseJson, string overrideJson)
+    {
+        var baseNode = JsonNode.Parse(baseJson);
+        var overrideNode = JsonNode.Parse(overrideJson);
+        var mergedNode = MergeJson(baseNode, overrideNode);
+        return mergedNode is null
+            ? "null"
+            : mergedNode.ToJsonString(new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
     }
 
     private static JsonNode? MergeJson(JsonNode? baseNode, JsonNode? overrideNode)
