@@ -84,6 +84,10 @@ public class UserSecretsExtensionStartupFilter : IStartupFilter
     {
         var baseNode = JsonNode.Parse(baseJson);
         var overrideNode = JsonNode.Parse(overrideJson);
+
+        if (baseNode is JsonObject baseObj) ExpandColonDelimitedKeys(baseObj);
+        if (overrideNode is JsonObject overrideObj) ExpandColonDelimitedKeys(overrideObj);
+
         var mergedNode = MergeJson(baseNode, overrideNode);
         return mergedNode is null
             ? "null"
@@ -91,6 +95,47 @@ public class UserSecretsExtensionStartupFilter : IStartupFilter
             {
                 WriteIndented = true
             });
+    }
+
+    private static void ExpandColonDelimitedKeys(JsonObject obj)
+    {
+        var colonKeys = obj
+            .Where(kvp => kvp.Key.Contains(':'))
+            .Select(kvp => (kvp.Key, kvp.Value))
+            .ToArray();
+
+        foreach (var (key, value) in colonKeys)
+        {
+            obj.Remove(key);
+
+            var segments = key.Split(':');
+            var current = obj;
+
+            for (var i = 0; i < segments.Length - 1; i++)
+            {
+                var segment = segments[i];
+                if (current[segment] is JsonObject existing)
+                {
+                    current = existing;
+                }
+                else
+                {
+                    var newObj = new JsonObject();
+                    current[segment] = newObj;
+                    current = newObj;
+                }
+            }
+
+            current[segments[^1]] = value?.DeepClone();
+        }
+
+        foreach (var (_, value) in obj)
+        {
+            if (value is JsonObject child)
+            {
+                ExpandColonDelimitedKeys(child);
+            }
+        }
     }
 
     private static JsonNode? MergeJson(JsonNode? baseNode, JsonNode? overrideNode)
