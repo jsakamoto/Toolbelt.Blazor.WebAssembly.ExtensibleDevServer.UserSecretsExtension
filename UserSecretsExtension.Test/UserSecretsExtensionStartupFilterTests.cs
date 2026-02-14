@@ -398,4 +398,271 @@ public class UserSecretsExtensionStartupFilterTests
         """;
         result.Is(expected);
     }
+
+    [Test]
+    public void MergeJsonStrings_ColonDelimitedKeyInOverride_ExpandsToHierarchy()
+    {
+        // Arrange
+        var baseJson = """
+        {
+          "Foo": {
+            "Bar": "Hello"
+          }
+        }
+        """;
+        var overrideJson = """
+        {
+          "Foo:Bar": "World"
+        }
+        """;
+
+        // Act
+        var result = UserSecretsExtensionStartupFilter.MergeJsonStrings(baseJson, overrideJson);
+
+        // Assert
+        var expected = """
+        {
+          "Foo": {
+            "Bar": "World"
+          }
+        }
+        """;
+        result.Is(expected);
+    }
+
+    [Test]
+    public void MergeJsonStrings_ColonDelimitedKeyInBase_ExpandsToHierarchy()
+    {
+        // Arrange
+        var baseJson = """
+        {
+          "Foo:Bar": "Hello"
+        }
+        """;
+        var overrideJson = """
+        {
+          "Foo": {
+            "Bar": "World"
+          }
+        }
+        """;
+
+        // Act
+        var result = UserSecretsExtensionStartupFilter.MergeJsonStrings(baseJson, overrideJson);
+
+        // Assert
+        var expected = """
+        {
+          "Foo": {
+            "Bar": "World"
+          }
+        }
+        """;
+        result.Is(expected);
+    }
+
+    [Test]
+    public void MergeJsonStrings_BothColonDelimited_ExpandsToHierarchy()
+    {
+        // Arrange
+        var baseJson = """
+        {
+          "Foo:Bar": "Hello"
+        }
+        """;
+        var overrideJson = """
+        {
+          "Foo:Bar": "World"
+        }
+        """;
+
+        // Act
+        var result = UserSecretsExtensionStartupFilter.MergeJsonStrings(baseJson, overrideJson);
+
+        // Assert
+        var expected = """
+        {
+          "Foo": {
+            "Bar": "World"
+          }
+        }
+        """;
+        result.Is(expected);
+    }
+
+    [Test]
+    public void MergeJsonStrings_DeepColonDelimitedKey_ExpandsToDeepHierarchy()
+    {
+        // Arrange
+        var baseJson = """
+        {
+          "Database": {
+            "Connection": {
+              "Host": "localhost"
+            }
+          }
+        }
+        """;
+        var overrideJson = """
+        {
+          "Database:Connection:Port": "5433"
+        }
+        """;
+
+        // Act
+        var result = UserSecretsExtensionStartupFilter.MergeJsonStrings(baseJson, overrideJson);
+
+        // Assert
+        var expected = """
+        {
+          "Database": {
+            "Connection": {
+              "Host": "localhost",
+              "Port": "5433"
+            }
+          }
+        }
+        """;
+        result.Is(expected);
+    }
+
+    [Test]
+    public void MergeJsonStrings_MultipleColonDelimitedKeys_ExpandsAllToHierarchy()
+    {
+        // Arrange
+        var baseJson = """
+        {
+          "Foo": {
+            "Bar": "Hello",
+            "Baz": "Original"
+          }
+        }
+        """;
+        var overrideJson = """
+        {
+          "Foo:Bar": "World",
+          "Foo:Qux": "New"
+        }
+        """;
+
+        // Act
+        var result = UserSecretsExtensionStartupFilter.MergeJsonStrings(baseJson, overrideJson);
+
+        // Assert
+        var expected = """
+        {
+          "Foo": {
+            "Bar": "World",
+            "Baz": "Original",
+            "Qux": "New"
+          }
+        }
+        """;
+        result.Is(expected);
+    }
+
+    [Test]
+    public void MergeJsonStrings_ColonDelimitedKeyCreatesNewBranch_CreatesHierarchy()
+    {
+        // Arrange
+        var baseJson = """
+        {
+          "Existing": "value"
+        }
+        """;
+        var overrideJson = """
+        {
+          "New:Nested:Key": "value"
+        }
+        """;
+
+        // Act
+        var result = UserSecretsExtensionStartupFilter.MergeJsonStrings(baseJson, overrideJson);
+
+        // Assert
+        var expected = """
+        {
+          "Existing": "value",
+          "New": {
+            "Nested": {
+              "Key": "value"
+            }
+          }
+        }
+        """;
+        result.Is(expected);
+    }
+
+    [Test]
+    public void MergeJsonStrings_ColonDelimitedKeyReplacesObject_ReplacesWithScalar()
+    {
+        // Arrange
+        var baseJson = """
+        {
+          "Foo": {
+            "Bar": {
+              "Nested": "value"
+            }
+          }
+        }
+        """;
+        var overrideJson = """
+        {
+          "Foo:Bar": "SimpleValue"
+        }
+        """;
+
+        // Act
+        var result = UserSecretsExtensionStartupFilter.MergeJsonStrings(baseJson, overrideJson);
+
+        // Assert
+        var expected = """
+        {
+          "Foo": {
+            "Bar": "SimpleValue"
+          }
+        }
+        """;
+        result.Is(expected);
+    }
+
+    [Test]
+    public void MergeJsonStrings_MixedColonAndRegularKeys_MergesCorrectly()
+    {
+        // Arrange
+        var baseJson = """
+        {
+          "Regular": "value1",
+          "Nested": {
+            "Key": "value2"
+          }
+        }
+        """;
+        var overrideJson = """
+        {
+          "Regular": "updated",
+          "Nested:Key": "overridden",
+          "Another:Deep:Key": "new"
+        }
+        """;
+
+        // Act
+        var result = UserSecretsExtensionStartupFilter.MergeJsonStrings(baseJson, overrideJson);
+
+        // Assert
+        var expected = """
+        {
+          "Regular": "updated",
+          "Nested": {
+            "Key": "overridden"
+          },
+          "Another": {
+            "Deep": {
+              "Key": "new"
+            }
+          }
+        }
+        """;
+        result.Is(expected);
+    }
 }
