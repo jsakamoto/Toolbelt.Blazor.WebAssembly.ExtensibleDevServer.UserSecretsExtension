@@ -14,7 +14,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.3" PrivateAssets="all" />
     -->
     <PackageReference Include="Toolbelt.Blazor.WebAssembly.ExtensibleDevServer" Version="10.0.3" PrivateAssets="all" />
-    <PackageReference Include="Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension" Version="10.0.3" PrivateAssets="all" />
+    <PackageReference Include="Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension" Version="10.0.3.1" PrivateAssets="all" />
 
   </ItemGroup>
 

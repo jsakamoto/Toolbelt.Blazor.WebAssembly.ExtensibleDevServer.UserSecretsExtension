@@ -1,6 +1,6 @@
 # User Secrets Extension for Blazor WebAssembly Extensible Dev Server
 
-[![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension/) [![Discord](https://img.shields.io/discord/798312431893348414?style=flat&logo=discord&logoColor=white&label=Blazor%20Community&labelColor=5865f2&color=gray)](https://discord.com/channels/798312431893348414/1202165955900473375)
+[![unit tests](https://github.com/jsakamoto/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/jsakamoto/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension/actions/workflows/unit-tests.yml) [![NuGet Package](https://img.shields.io/nuget/v/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension.svg)](https://www.nuget.org/packages/Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.UserSecretsExtension/) [![Discord](https://img.shields.io/discord/798312431893348414?style=flat&logo=discord&logoColor=white&label=Blazor%20Community&labelColor=5865f2&color=gray)](https://discord.com/channels/798312431893348414/1202165955900473375)
 
 
 An extension that enables the use of User Secrets in a Blazor WebAssembly Standalone project hosted using the Toolbelt.Blazor.WebAssembly.ExtensibleDevServer.
@@ -56,7 +56,7 @@ Alternatively, use the .NET CLI:
 
 ```shell
 dotnet user-secrets init   # only needed once per project
-dotnet user-secrets set "SomeKey" "my-custom-value"
+dotnet user-secrets set "SomeSection:SomeKey" "my-custom-value"
 ```
 
 ### 3. Run your project
