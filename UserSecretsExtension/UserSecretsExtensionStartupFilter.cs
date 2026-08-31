@@ -44,7 +44,7 @@ public class UserSecretsExtensionStartupFilter : IStartupFilter
     {
         // Filter requests to appsettings.*.json
         var requestPath = context.Request.Path.Value;
-        if (!requestPath.StartsWith("/appsettings.") || !requestPath.EndsWith(".json") || !File.Exists(secretJsonPath))
+        if (!(requestPath?.StartsWith("/appsettings.") ?? false) || !requestPath.EndsWith(".json") || !File.Exists(secretJsonPath))
         {
             await nextMiddleware();
             return;
