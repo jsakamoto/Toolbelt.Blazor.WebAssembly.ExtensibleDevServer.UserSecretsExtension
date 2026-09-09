@@ -29,7 +29,7 @@ public class SampleAppE2ETests
 
     private static async Task<IContainer> StartContainerAsync()
     {
-        var container = new ContainerBuilder("mcr.microsoft.com/dotnet/sdk:10.0.400")
+        var container = new ContainerBuilder("mcr.microsoft.com/dotnet/sdk:10.0.401")
             .WithBindMount(PathUtils.SolutionDir, "/work")
             .WithWorkingDirectory("/work/SampleApp")
             .WithEntrypoint("tail", "-f", "/dev/null")
