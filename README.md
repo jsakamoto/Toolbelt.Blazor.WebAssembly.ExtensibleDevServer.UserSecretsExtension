@@ -9,6 +9,9 @@ An extension that enables the use of User Secrets in a Blazor WebAssembly Standa
 
 It allows developers to manage their own custom configuration settings without modifying or accidentally committing appsettings.json or appsettings.Development.json files to source control.
 
+> [!NOTE]
+> This package is for .NET 10. If your app targets .NET 11 or later, use [Toolbelt.Blazor.WebAssembly.ExtensibleGateway.UserSecretsExtension](https://www.nuget.org/packages/Toolbelt.Blazor.WebAssembly.ExtensibleGateway.UserSecretsExtension/) instead.
+
 ## The Problem
 
 In a typical Blazor WebAssembly standalone project, application configuration is served from JSON files under the `wwwroot` folder, such as `appsettings.json` and `appsettings.Development.json`. These files are usually committed to source control so that every team member gets a working configuration out of the box.
