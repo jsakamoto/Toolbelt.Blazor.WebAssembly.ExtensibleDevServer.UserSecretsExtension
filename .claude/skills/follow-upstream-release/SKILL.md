@@ -42,7 +42,27 @@ a few files. Bump all of them together.
    (`dotnet pack -c Release`) and copy the resulting `.nupkg` from that repo's `_dist/` folder into
    this repository's `_local-packages/` folder — see `AGENTS.md` for the full mechanism
    (`LocalPackages.CopyToLocalFeed()`, wired into `AssemblySetup.cs`).
-5. Run the tests and confirm everything passes:
+5. Update the NuGet packages referenced by `UserSecretsExtension.Test/UserSecretsExtension.Test.csproj`
+   to the latest stable versions available at that moment (see the `dotnet-test-projects` skill):
+   ```
+   dotnet list ./UserSecretsExtension.Test/UserSecretsExtension.Test.csproj package --outdated
+   ```
+   - Bump every `PackageReference` it reports, including `NUnit`, `NUnit3TestAdapter`,
+     `Microsoft.NET.Test.Sdk`, `Testcontainers`, `ChainingAssertion-NUnit.Bin`, `XProcess`, and the
+     `Toolbelt.*` packages. If the command cannot reach a package, check the nuget.org flat-container
+     index JSON instead.
+   - Do not touch the `Toolbelt.Blazor.WebAssembly.ExtensibleDevServer` version here; step 2 owns it.
+   - If a bump needs a test code change, or a package has no stable release for the new setup, report
+     it rather than silently swapping in a replacement.
+6. Raise the SDK container image the E2E test runs in to the latest .NET 10 SDK, every time, without
+   waiting for a failure. Find the newest published tag:
+   ```
+   curl -s https://mcr.microsoft.com/v2/dotnet/sdk/tags/list | tr ',' '\n' | tr -d '"[] ' | grep -E '^10\.0\.[0-9]+$' | sort -V | tail -1
+   ```
+   - Set that tag in `UserSecretsExtension.Test/SampleAppE2ETests.cs`, then
+     `docker pull mcr.microsoft.com/dotnet/sdk:<tag>` locally.
+   - The tag must never be older than the SDK that builds the package locally (`dotnet --version`).
+7. Run the tests and confirm everything passes:
    ```
    dotnet test --project ./UserSecretsExtension.Test/UserSecretsExtension.Test.csproj --output detailed
    ```
@@ -52,9 +72,9 @@ a few files. Bump all of them together.
 ## Gotchas
 
 - `UserSecretsExtension.Test/SampleAppE2ETests.cs` pins an exact
-  `mcr.microsoft.com/dotnet/sdk:X.Y.Z` container image tag, independent of the DevServer version.
-  Only touch it if a test fails with "You must install or update .NET to run this application" —
-  that means the pinned tag is older than the SDK that actually built a package under test.
+  `mcr.microsoft.com/dotnet/sdk:X.Y.Z` container image tag, independent of the DevServer version,
+  but step 6 still raises it every time. A test failing with "You must install or update .NET to run
+  this application" means the tag is older than the SDK that actually built a package under test.
 - Files in this repository are stored as LF line endings in git; a normal checkout converts them to
   CRLF locally. Editing with a POSIX tool (`sed`, a bash heredoc) leaves LF, which is harmless but
   worth re-normalizing to CRLF before committing if you want a clean diff.
